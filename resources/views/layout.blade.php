@@ -80,7 +80,7 @@
             <div class="col-md-12">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <a a class="navbar-brand" href="#">
-                        <h2>Student Management Project</h2>
+
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -94,7 +94,7 @@
             <div class="col-md-3">
 
                 <div class="sidebar">
-                    <a class="active" href="#home">Home</a>
+                    <a href="{{url('/home')}}">Home</a>
                     <a href="{{url('/students')}}">Student</a>
                     <a href="{{url('/teachers')}}">Teacher</a>
                     <a href="{{url('/courses')}}">Courses</a>

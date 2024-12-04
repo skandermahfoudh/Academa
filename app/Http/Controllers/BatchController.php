@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Batch;
 use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class BatchController extends Controller
@@ -13,10 +14,21 @@ class BatchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index()
     {
+
+
+
+
+
+
+
+
+
+        if (!Auth::check() || !Auth::user()->name)
+            return redirect('/login');
         $batches = Batch::all();
-        return view ('batches.index')->with('batches', $batches);
+        return view('batches.index')->with('batches', $batches);
     }
 
     /**
@@ -24,9 +36,8 @@ class BatchController extends Controller
      */
     public function create(): View
     {
-        $courses = Course::pluck('name','id');
-        return view('batches.create' , compact('courses'));
-        
+        $courses = Course::pluck('name', 'id');
+        return view('batches.create', compact('courses'));
     }
 
     /**
@@ -65,7 +76,7 @@ class BatchController extends Controller
         $batches = Batch::find($id);
         $input = $request->all();
         $batches->update($input);
-        return redirect('batches')->with('flash_message', 'Batch Updated!');  
+        return redirect('batches')->with('flash_message', 'Batch Updated!');
     }
 
     /**
@@ -74,6 +85,6 @@ class BatchController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         Batch::destroy($id);
-        return redirect('batches')->with('flash_message', 'Batch deleted!'); 
+        return redirect('batches')->with('flash_message', 'Batch deleted!');
     }
 }

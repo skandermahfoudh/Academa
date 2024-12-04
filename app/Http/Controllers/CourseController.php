@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class CourseController extends Controller
@@ -15,8 +15,12 @@ class CourseController extends Controller
      */
     public function index()
     {
+        if (!Auth::check() || !Auth::user()->name) {
+            return redirect('/login');
+        }
+
         $courses = Course::all();
-        return view ('courses.index')->with('courses', $courses);
+        return view('courses.index')->with('courses', $courses);
     }
 
     /**
@@ -63,7 +67,7 @@ class CourseController extends Controller
         $courses = Course::find($id);
         $input = $request->all();
         $courses->update($input);
-        return redirect('courses')->with('flash_message', 'Course Updated!');  
+        return redirect('courses')->with('flash_message', 'Course Updated!');
     }
 
     /**
@@ -72,6 +76,6 @@ class CourseController extends Controller
     public function destroy(string $id)
     {
         Course::destroy($id);
-        return redirect('courses')->with('flash_message', 'Course deleted!'); 
+        return redirect('courses')->with('flash_message', 'Course deleted!');
     }
 }

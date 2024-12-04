@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() 
     {
+        if (!Auth::check() || !Auth::user()->name)  
+        return redirect ('/login');
         $payments = Payment::all();
         return view ('payments.index')->with('payments', $payments);
     }

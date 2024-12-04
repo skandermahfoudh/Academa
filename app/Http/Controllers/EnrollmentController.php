@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Enrollment;
+use App\Models\Batch;
+use App\Models\Student;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class EnrollmentController extends Controller
@@ -13,9 +16,12 @@ class EnrollmentController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
     {
+        if (!Auth::check() || !Auth::user()->name)
+            return redirect('/login');
         $enrollments = Enrollment::all();
-        return view ('enrollments.index')->with('enrollments', $enrollments);
+        return view('enrollments.index')->with('enrollments', $enrollments);
     }
 
     /**
@@ -23,7 +29,11 @@ class EnrollmentController extends Controller
      */
     public function create()
     {
-        return view('enrollments.create');
+
+
+        $batches = Batch::pluck('name', 'id');
+        $students = Student::pluck('name', 'id');
+        return view('enrollments.create', compact('batches', 'students'));
     }
 
     /**
@@ -31,7 +41,7 @@ class EnrollmentController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+        $input =                $request->all();
         Enrollment::create($input);
         return redirect('enrollments')->with('flash_message', 'Enrollment Addedd!');
     }
@@ -62,7 +72,7 @@ class EnrollmentController extends Controller
         $enrollments = Enrollment::find($id);
         $input = $request->all();
         $enrollments->update($input);
-        return redirect('enrollments')->with('flash_message', 'Enrollment Updated!');  
+        return redirect('enrollments')->with('flash_message', 'Enrollment Updated!');
     }
 
     /**
@@ -71,6 +81,7 @@ class EnrollmentController extends Controller
     public function destroy(string $id)
     {
         Enrollment::destroy($id);
-        return redirect('enrollments')->with('flash_message', 'Enrollment deleted!'); 
+
+        return  redirect('enrollments')->with('flash_message', 'Enrollment deleted!');
     }
 }

@@ -8,6 +8,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +23,13 @@ use App\Http\Controllers\EnrollmentController;
 */
 
 Route::get('/', function () {
-    return view('layout');
+    return redirect('/login');
+});
+Route::group(['middleware' => 'guest'], function () {
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'registerPost'])->name('register');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'loginPost'])->name('login');
 });
 Route::resource('/students', StudentController :: class );
 Route::resource('/teachers', TeacherController :: class );
@@ -30,3 +38,8 @@ Route::resource('/batches', BatchController :: class );
 Route::resource('/enrollments', EnrollmentController :: class );
 Route::resource('/payments', PaymentController :: class );
 Route::get('report/report1/{pid}',[ReportController::class,'report1']);
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', [HomeController::class, 'index']);
+    Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
+});
